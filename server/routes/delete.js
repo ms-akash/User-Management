@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User')
 const bcrypt = require('bcryptjs');
 
-router.post('/',async (req, res)=>{
+router.post('/', (req, res)=>{
     const {userid} = req.body
     
     User.destroy({
