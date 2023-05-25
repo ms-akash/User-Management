@@ -5,11 +5,9 @@ const Address = require('../models/Address')
 const EducationalInformation = require('../models/EducationalInformation')
 const EmployemntInformation = require('../models/EmployemntInformation') 
 const UserEmployment = require('../models/UserEmployment')
-const Mobile = require('../models/Mobile')
 const Personal = require('../models/Personal')
 const UserCardDetails = require('../models/UserCardDetails')
 const bcrypt = require('bcryptjs');
-const { Sequelize } = require('sequelize');
 
 var add, emplId
 var exist = true
@@ -65,7 +63,7 @@ const getEmplId = async ()=>{
 
 router.post('/',async (req, res)=>{
     var  userId
-    const {name, password, gender, age, dob, city, state, country} = req.body
+    const {name, password, gender, age, dob, city, state, country, mobile_number} = req.body
     var salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt)
     address = await getExistingAddress(city, state, country)
@@ -102,7 +100,8 @@ router.post('/',async (req, res)=>{
                 'address' : add,
                 'password' : hashedPassword,
                 'createdAt' : new Date().toJSON().slice(0, 10),
-                'updatedAt' : new Date().toJSON().slice(0, 10)
+                'updatedAt' : new Date().toJSON().slice(0, 10),
+                'mobile_number' : mobile_number
             })
             .then((resultUser)=>{
                 EducationalInformation.create({
@@ -117,12 +116,6 @@ router.post('/',async (req, res)=>{
                     'createdAt' : new Date().toJSON().slice(0, 10),
                     'updatedAt' : new Date().toJSON().slice(0, 10)
                 }).then((r)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
-
-                Mobile.create({
-                    'user_id' : userId,
-                    'createdAt' : new Date().toJSON().slice(0, 10),
-                    'updatedAt' : new Date().toJSON().slice(0, 10)
-                }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
                 Personal.create({
                     'user_id' : userId,

@@ -29,6 +29,9 @@ const User = db.define('user',{
     },
     updatedAt : {
         type : Sequelize.DATE
+    },
+    mobile_number : {
+        type : Sequelize.STRING
     }
 },{
     tableName : 'users'

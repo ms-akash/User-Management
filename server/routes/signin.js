@@ -4,11 +4,11 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs');
 
 router.get('/', (req, res)=>{
-    const {userid, userpas} = req.body
+    const {mobile_number, userpas} = req.body
     
     User.findOne({
         where : {
-            'id' : userid
+            'mobile_number' : mobile_number
         }
     })
     .then((user)=>{
