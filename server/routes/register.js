@@ -8,12 +8,17 @@ router.post('/',async (req, res)=>{
     var salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt)
 
-    User.count()
+    User.findAll({
+        attributes : ['id'],
+        order : [
+            ['id', 'DESC']
+        ],
+        limit : 1
+    })
         .then((user)=>{
             
-            var id = user ;
-            id = id - 10000
-
+            var {id} = user[0]
+            id = id + 1
             User.create({
                 'id' : id,
                 'name' : name,

@@ -9,6 +9,7 @@ app.use(bodyParser.json())
 
 app.use('/register', require('./routes/register'));
 app.use('/signin', require('./routes/signin'));
+app.use('/delete', require('./routes/delete'));
 
 const isvalid =()=>{
     db.authenticate()
