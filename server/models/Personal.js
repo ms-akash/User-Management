@@ -11,6 +11,12 @@ const Personal = db.define('user',{
     },
     physically_disabled : {
         type : Sequelize.BOOLEAN
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'personal'

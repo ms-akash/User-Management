@@ -11,15 +11,68 @@ const UserCardDetails = require('../models/UserCardDetails')
 const bcrypt = require('bcryptjs');
 const { Sequelize } = require('sequelize');
 
-router.post('/',(req, res)=>{
-    var address, userId, emplId
+var add, emplId
+var exist = true
+
+const getNewAddress = async (city, state,country)=>{
+    await Address.findAll({
+        attributes : ['id'],
+        order : [
+            ['id', 'DESC']
+        ],
+        limit : 1,
+        raw : true
+    }).then((a)=>{
+        var {id} = a[0]
+        add = id + 1
+    })
+    .catch((error)=> console.log(error))
+}
+
+const getExistingAddress = async (city, state, country)=>{
+    await Address.findAll({
+        attributes : ['id'],
+        where : {
+            'city' : city,
+            'state' : state,
+            'country' : country
+        }
+    })
+    .then((resultAddress)=>{
+        const {id} = resultAddress[0]
+        add = id
+    })
+    .catch((error)=>{
+        exist = false
+        console.log(error)
+    })
+}
+
+const getEmplId = async ()=>{
+    await EmployemntInformation.findAll({
+        attributes : ['empl_id'],
+        order : [
+            ['empl_id', 'DESC']
+        ],
+        limit : 1,
+        raw : true
+    }).then((resultEmploy)=>{
+        const {empl_id} = resultEmploy[0]
+        emplId = empl_id + 1;
+        console.log("FUNCTION----------------" + emplId)
+    }).catch(err=>console.log(err))
+}
+
+router.post('/',async (req, res)=>{
+    var  userId
     const {name, password, gender, age, dob, city, state, country} = req.body
     var salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt)
-
-    const transaction = Sequelize.transaction()
-
-    User.findAll({
+    address = await getExistingAddress(city, state, country)
+    if(!exist) address = await getNewAddress(city, state, country)
+    await getEmplId()
+    console.log("ROUTE----------------" + emplId)
+    await User.findAll({
         attributes : ['id'],
         order : [
             ['id', 'DESC']
@@ -30,94 +83,70 @@ router.post('/',(req, res)=>{
             var {id} = user[0]
             userId = id + 1
             
-            Address.findAll({
-                attributes : ['id'],
-                where : {
-                    'city' : city,
-                    'state' : state,
-                    'country' : country
-                }
-            })
-            .then((resultAddress)=>{
-                var {addressid} = resultAddress[0]
-                address = addressid
-            })
-            .catch((error)=>{
-                Address.findAll({
-                    attributes : ['id'],
-                    order : [
-                        ['id', 'DESC']
-                    ],
-                    limit : 1
-                })
-                .then((resultAddress)=>{
-                    var {addressid} = resultAddress[0]
-                    address = addressid + 1;
-
-                    Address.create({
-                        'id' : address,
-                        'city' : city,
-                        'state' : state,
-                        'country' : country
-                    },{transaction : transaction})
-                })
-                .catch((error)=> console.log(err))
-            })
-
+            if(!exist){
+            Address.create({
+                'id' : add,
+                'city' : city,
+                'state' : state,
+                'country' : country,
+                'createdAt' : new Date().toJSON().slice(0, 10),
+                'updatedAt' : new Date().toJSON().slice(0, 10)
+            }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
+        }
             User.create({
                 'id' : userId,
                 'name' : name,
                 'gender' : gender,
                 'age' : age,
                 'dob' : dob,
-                'address' : address,
-                'password' : hashedPassword
-            },{transaction : transaction})
+                'address' : add,
+                'password' : hashedPassword,
+                'createdAt' : new Date().toJSON().slice(0, 10),
+                'updatedAt' : new Date().toJSON().slice(0, 10)
+            })
             .then((resultUser)=>{
                 EducationalInformation.create({
-                    'user_id' : userId
-                })
-                EmployemntInformation.findAll({
-                    attributes : ['empl_id'],
-                    order : [
-                        ['empl_id', 'DESC']
-                    ],
-                    limit : 1
-                }).then((resultEmploy)=>{
-                    const {empid} = resultEmploy[0]
-                    emplId = empid + 1;
+                    'user_id' : userId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((r)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
-                    EmployemntInformation.create({
-                        'empl_id' : emplId,
-                        'user_id' : userId
-                    },{transaction : transaction})
-                }).console.log(err=>console.log(err))
+                EmployemntInformation.create({
+                    'empl_id' : emplId,
+                    'user_id' : userId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((r)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
                 Mobile.create({
-                    'user_id' : userId
-                },{transaction : transaction})
+                    'user_id' : userId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
                 Personal.create({
-                    'user_id' : userId
-                },{transaction : transaction})
+                    'user_id' : userId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
                 UserCardDetails.create({
-                    'user_id' : userId
-                },{transaction : transaction})
+                    'user_id' : userId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
                 UserEmployment.create({
-                    'empl_id' : emplId
-                },{transaction : transaction})
+                    'empl_id' : emplId,
+                    'createdAt' : new Date().toJSON().slice(0, 10),
+                    'updatedAt' : new Date().toJSON().slice(0, 10)
+                }).then((resultMobile)=>{console.log('successfully inserted')}).catch((err)=>console.log(err))
 
-                transaction.commit()
                 res.send('Registration Successfully, your user id is ' + userId)
             })
-            .catch((error)=>{
-                transaction.rollback()
-                console.log(err)
-            })
+            .catch((error)=>console.log(error))
         })
-        .catch(err=>console.log(err));
+        .catch(err=>console.log(err)); 
 })
 
 

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/database');
 
 const EducationalInformation = db.define('user',{
-    id : {
+    user_id : {
         type : Sequelize.INTEGER,
         primaryKey: true
     },
@@ -17,6 +17,12 @@ const EducationalInformation = db.define('user',{
     },
     cgpa : {
         type :  Sequelize.FLOAT
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'educational_information'

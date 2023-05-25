@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/database');
 
 const EmployemntInformation = db.define('user',{
-    empli_d : {
+    empl_id : {
         type : Sequelize.INTEGER,
         primaryKey: true
     },
@@ -11,9 +11,15 @@ const EmployemntInformation = db.define('user',{
     },
     employeed : {
         type : Sequelize.BOOLEAN
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
-    tableName : 'employemnt_information'
+    tableName : 'employment_information'
 })
 
 module.exports = EmployemntInformation

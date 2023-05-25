@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/database');
 
 const UserEmployment = db.define('user',{
-    user_id : {
+    empl_id : {
         type : Sequelize.INTEGER,
         primaryKey: true
     },
@@ -17,6 +17,12 @@ const UserEmployment = db.define('user',{
     },
     working : {
         type : Sequelize.BOOLEAN
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'user_employment',

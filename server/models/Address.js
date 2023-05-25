@@ -14,6 +14,12 @@ const Address = db.define('user',{
     },
     country : {
         type : Sequelize.STRING
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'address'

@@ -8,6 +8,12 @@ const Mobile = db.define('user',{
     },
     mobile_number : {
         type : Sequelize.STRING
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'mobile',

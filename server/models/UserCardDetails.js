@@ -17,6 +17,12 @@ const UserCardDetails = db.define('user',{
     },
     voter_id : {
         type : Sequelize.STRING
+    },
+    createdAt : {
+        type : Sequelize.DATE
+    },
+    updatedAt : {
+        type : Sequelize.DATE
     }
 },{
     tableName : 'user_card_details'
